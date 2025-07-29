@@ -2,15 +2,49 @@
 
 MongoDB is an open source NOSQL database. This means it is **Not Only SQL**.
 
-The data is stored within documents which are Json- like objects.
+The data within MongoDB is inputted as Json like objects and stored within documents as Bson documents.
 
-Data is sent in as Json and stored as bson.
+![Json_Bson](json_bson.jpg)
 
-The max size of a mongoDB file is 16mb.
+## Core concepts
 
-These documents are grouped together in collections. There is no real structure for a collection as they are schemaless.
+### Documents
+
+In mongoDB data is stored as Bson Documents.
+
+Bson is a binary representation of a Json.
+
+**Fun fact**: _The max size of a mongoDB document is 16mb._
+
+### Collections
+
+When we have multiple Bson Documents we are able to store them together in collections.
+
+A database is able to store one or more collections of documents.
+
+![Collections and documents](database_colection.png)
+
+There is no real structure for a collection as they are schemaless.
+
+### Node
 
 A mongodb node is one server or machine in the database system.
+
+### Mongod
+
+#### (Not used yet)
+
+A primary daemon (background) process. It handles:
+
+- Data requests
+- Manages data access
+- Performs background management operations
+
+### MongoDB Shell
+
+This is the shell used within MongoDB. It allows us to interact with MongoDB deployments in Atlas, locally or another remote host.
+
+We mainly use it to test queries, make changes and interact with the data.
 
 ## Architecure
 
@@ -23,7 +57,7 @@ primary node is the main source for all the writen operations. This is where all
 
 Secondary node is a mirror of the primary node as it duplicates the data. This is used for dispersing the read workloads and load balancing.
 
-![Replica]("mongodbreplicaset.png")
+![Replica](mongodbreplicaset.png)
 
 #### Advantages
 
@@ -43,7 +77,7 @@ Horizontal scaling is the core to sharding. Large datasets are divided into smal
 
 Sharding helps with ensuring all the connections are still together through distributions across machines.
 
-![Sharding]("sharding.png")
+![Sharding](sharding.png)
 
 #### Advantages
 
@@ -109,10 +143,365 @@ When going over the validations of our collections we have the options to change
 
 - Strict will implement rules all the time.
 
-### Functions
+## Data types
 
-- number long or number int will allow long numbers in MongoDB. Use doubles not floats.
+As MongoDB stores data using Bson, this allows the ability to store data types that arent available in Json.
 
-- Show collections is a function which will show the collections.
+## Date
 
-- db.getCollectionNames() - will print the names of the the collections created within the database.
+Date can be stored as either a string or a Date object. This includes:
+
+- Date() - A method which returns the current date as a string.
+- new Date()- constructor which returns the date object in a wrapper
+- ISODate()- constructor which returns the date object in a wrapper
+
+### Double
+
+MongoDB uses double over float
+
+**Example:**
+
+```
+db.types.insertOne(
+   {
+      "_id": 2,
+      "value": Double(1),
+      "expectedType": "Double"
+   }
+)
+```
+
+### Number Long
+
+A number long or number int will allow long numbers in MongoDB.
+
+**Example:**
+
+```
+db.types.insertOne(
+   {
+      "_id": 3,
+      "value": Long(1),
+      "expectedType": "Long"
+   }
+)
+```
+
+## Functions used
+
+### list collections
+
+A shell command which will show a list of the collections within the database.
+
+```
+show collections
+```
+
+![show collections](show_collections.png)
+
+### Get collection names
+
+A JavaScript function which return an array of the collection names in the current database.
+
+```
+db.getCollectionNames()
+```
+
+## Questions and solutions
+
+### Find field
+
+When inside the database we can search for specific fields and items through Mongosh.
+
+```
+db.characters.find({name: 'Luke Skywalker'},
+{name: 1})
+```
+
+**Output:**
+
+```
+{
+  _id: ObjectId('6888e7975b6d2a76fd6762dc'),
+  name: 'Luke Skywalker'
+}
+```
+
+### Find with further specifications
+
+```
+db.characters.find({name: 'chewbacca'},
+{'species.name': 1})
+
+```
+
+**Output:**
+
+```
+{
+  _id: ObjectId('6888e7975b6d2a76fd6762f9'),
+  species: {
+    name: 'Wookiee'
+  }
+}
+```
+
+### Filter find
+
+```
+db.characters.find({eye_color:
+    {$in:
+        ['yellow', 'orange']
+    }
+ },
+    {name: 1}
+)
+```
+
+**Output:**
+
+** Multiple Object \_ids and names belonging to the entries which hit the fields wants **
+
+### Use $and and/or $or to find:
+
+#### 1. Female characters with blue eyes and Male characters with yellow eyes
+
+```
+db.characters.find({$or:
+        [
+            {$and:
+                [{gender: 'female'},
+                    { eye_color: 'blue' } ] },
+                    { $and: [ { gender: 'male' },
+                    { eye_color: 'yellow' }
+                ]
+            }
+        ]
+    }
+)
+```
+
+**Output:**
+** Documents matching with the parameters**
+
+### Do some research and see if you can find how to convert all the height strings to integers. Change null results.
+
+```
+db.characters.updateMany(
+  {height: "unknown"},
+    {$unset: {height: ""}})
+    db.characters.updateMany(
+    {},
+        [{$set: {height:
+            {$toInt: "$height"}}
+        }
+  ]
+)
+```
+
+## MongoDB operators
+
+### $eq
+
+This is the equality condition. While other programming languages will use = as an operator mongoDB replaces this with **$eq**.
+
+**Example**
+
+```
+    {<field>: {$eq: <values>}}
+```
+
+If the <value> is an array, it matches documents where the <field> matches the array or the <field> contains an element that matches the array exactly.
+
+### $gt
+
+Selects those documents where the values of the spcified field is greater than. While other programming languages will use > as an operator mongoDB replaces this with **$gt**.
+
+**Example**
+
+```
+{ field:
+    { $gt: value }
+}
+```
+
+### $gte
+
+Selects the documents where the value of the specified field is greater than or equal to. While other programming languages will use >= as an operator mongoDB replaces this with **$gte**.
+
+```
+{ field:
+    { $gte: value }
+}
+```
+
+### $in
+
+This operator selects the documents where the value of a field equals any value in the specified array.
+
+```
+{ field:
+    { $in: [<value1>,       <value2>, ... <valueN>
+    ] }
+}
+```
+
+### $lt
+
+Comparison between two values and returns a boolean.
+
+```
+{ $lt:
+ [ <expression1>, <expression2> ]
+  }
+```
+
+### $lte
+
+Selects the documents where the values of the field is less than or equal to. While other programming languages will use <= as an operator mongoDB replaces this with **$lte**.
+
+```
+db.inventory.updateMany(
+   { "carrier.fee":
+    { $lte: 5 } },
+        { $set:
+        { price: 9.99
+        }
+    }
+)
+```
+
+### $ne
+
+Selects documents where the value of the specified field is not equal to the specified value. Includes documents not containing the specified field.
+
+```
+{ field:
+    { $ne: value
+    }
+}
+```
+
+### $nin
+
+Selects the documents where the specified field value doesnt exist.
+
+```
+{ field:
+    { $nin: [ <value1>, <value2> ... <valueN>
+] } }
+```
+
+## Change mass to double
+
+db.characters.update(
+{mass: "1,358"},
+{$set: {mass: "1358"}}
+)
+
+db.characters.update(
+{mass: "unknown"},
+{$unset: {mass: ""}},
+{multi: true}
+)
+
+db.characters.update(
+{mass: {$exists: true}},
+  [{$set: {mass: {$toDouble: "$mass"}}}],
+{multi: true}
+)
+
+##change datatype and remove nulls
+
+db.characters.updateMany(
+{height: "unknown"},
+{$unset: {height: ""}}
+)
+db.characters.updateMany(
+  {},
+  [{$set: {height: {$toInt: "$height"}}}]
+)
+
+# Aggregation in MongoDB
+
+```
+db.characters.aggregate([
+    {$match:
+        {"species.name": "Human"}},
+        {$group:
+            {_id: null, total:
+            {$sum:"$hieght"}
+
+        }}
+])
+```
+
+Null is used when we dont want to group them by anything in the \_id sections.
+
+```
+db.characters.aggregate([
+{ $group: {_id: "$homeworld.name", max: {$max: "$height"}}}
+
+])
+```
+
+## Single purpose aggregation
+
+distinct
+count
+db.characters.distinct("species.name")
+
+With .agreggate mongoDB doesnt show all results, only the top 10.
+
+db.characters.aggregate([
+{
+$group: {
+_id: "$species.name",
+avg: {$avg: "$mass"},
+count: {$sum: 1}
+}
+}, { $match: {avg: {$ne: null}}},
+{$sort: {avg: 1}}
+]).toArray
+
+# Reference
+
+Assign people to the starship
+
+db.characters.find({name: "Darth Vader"}, {\_id: 1})
+
+### Create a collection
+
+Collection called starships
+
+db.createCollection("starships")
+
+db.starships.insertOne({
+replace the objectID with the one given!!
+})
+
+##Code
+This will give you both the initial object and the referenced object (through lookup)
+
+db.starships.aggregate([
+{$lookup:{
+from: "characters",
+localField: "pilot",
+foreignField: "\_id",
+as: "matched_pilot"
+}}
+
+])
+Better than embedding as this gives you results from more than one.
+
+##Code here is together
+
+### Get object id
+
+db.characters.find({name: {$in: ["Chewbacca", "Han Solo", "Lando Calrissian", "Nien Nunb"]}}, {\_id: 1})
+
+# Questions
+
+when to use {}
+when to use $
+when to use []
