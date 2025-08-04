@@ -8,14 +8,6 @@ The data within MongoDB is inputted as Json like objects and stored within docum
 
 ## Core concepts
 
-### Documents
-
-In mongoDB data is stored as Bson Documents.
-
-Bson is a binary representation of a Json.
-
-**Fun fact**: _The max size of a mongoDB document is 16mb._
-
 ### Collections
 
 When we have multiple Bson Documents we are able to store them together in collections.
@@ -26,6 +18,14 @@ A database is able to store one or more collections of documents.
 
 There is no real structure for a collection as they are schemaless.
 
+### Documents
+
+In mongoDB data is stored as Bson Documents.
+
+Bson is a binary representation of a Json.
+
+**Fun fact**: _The max size of a mongoDB document is 16mb._
+
 ### Node
 
 A mongodb node is one server or machine in the database system.
@@ -34,11 +34,11 @@ A mongodb node is one server or machine in the database system.
 
 #### (Not used yet)
 
-A primary daemon (background) process. It handles:
+A primary daemon (background) process and stores data on the disk. It handles:
 
 - Data requests
 - Manages data access
-- Performs background management operations
+- Performs background operations
 
 ### MongoDB Shell
 
@@ -50,10 +50,27 @@ We mainly use it to test queries, make changes and interact with the data.
 
 Occurs in the background, it is designed to be flexible.
 
+### Sharding
+
+**Horizontal scaling** is the core to sharding. Large datasets are divided into smaller pieces and distributed across multiple shards (servers).
+
+Sharding helps with ensuring all the connections are still together through distributions across machines.
+
+![Sharding](sharding.png)
+
+#### Advantages
+
+- Improves performance
+- Improves scalbaility in comparison to vetical scaling.
+
+#### Disadvantages
+
+- Increase complexity
+- Operational overhead, backups, constant monitorisation and maintenance.
+
 ### Replica sets
 
-Several copies of the same data is held in multiple nodes. A
-primary node is the main source for all the writen operations. This is where all data modifications begin and are implemented initially.
+Several copies of the same data is held in multiple nodes. The primary node is the main source for all the writen operations. This is where all data modifications begin and are implemented initially.
 
 Secondary node is a mirror of the primary node as it duplicates the data. This is used for dispersing the read workloads and load balancing.
 
@@ -70,24 +87,6 @@ Secondary node is a mirror of the primary node as it duplicates the data. This i
 #### Disadvantages
 
 - Writing to the secondary node can cause data inconsistency.
-
-### Sharding
-
-Horizontal scaling is the core to sharding. Large datasets are divided into smaller pieces and distributed across multiple shards (servers).
-
-Sharding helps with ensuring all the connections are still together through distributions across machines.
-
-![Sharding](sharding.png)
-
-#### Advantages
-
-- Improves performance
-- Improves scalbaility in comparison to vetical scaling.
-
-#### Disadvantages
-
-- Increase complexity
-- Operational overhead, backups, constant monitorisation and maintenance.
 
 ## MongoDB Use cases
 
@@ -116,7 +115,7 @@ In order to interact with our MongoDB database we use MongoDB shell, known as MO
 
 ### Embedding
 
-Embed subdocuments inside a larger document.
+Embed sub-documents inside a larger document.
 
 This is good for:
 
@@ -230,7 +229,7 @@ db.characters.find({name: 'Luke Skywalker'},
 ### Find with further specifications
 
 ```
-db.characters.find({name: 'chewbacca'},
+db.characters.find({name: 'Chewbacca'},
 {'species.name': 1})
 
 ```
