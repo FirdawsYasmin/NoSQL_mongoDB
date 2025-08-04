@@ -69,7 +69,7 @@ In SQL they have vertical scaling, in NOSQL we have horizontal scaling (which al
 
 - Horizontal scaling is better because it gives high **availability**.
 
-  -> If we have multiple servers and one or two of them stop working the others will still continue working.
+- If we have multiple servers and one or two of them stop working the others will still continue working.
 
 - Good for sharding and adding more servers as a safety net
 
@@ -126,7 +126,7 @@ Column families contain related information, it consists of multiple rows.
 - Grouped logically, similar to a table but more flexible.
 
 Userprofile is a column containing all this information.
-![Column with its contents](Nosql_columns.png)
+![Column with its contents](pictures/Nosql_columns.png)
 
 #### Use cases
 
@@ -154,7 +154,7 @@ mini over view: Forming relationships (edges) through connecting entities (nodes
 
 ### Overview
 
-![sql_vs_nosql](sql_vs_nosql.png)
+![sql_vs_nosql](pictures/sql_vs_nosql.png)
 
 - SQL allows a structured format nosql allows semi structure
 
@@ -184,12 +184,11 @@ Occurs in the background, it is designed to be flexible.
 
 ### Replica sets
 
-Several copies of the same data is held in multiple nodes. A
-primary node is the main source for all the writen operations. This is where all data modifications begin and are implemented initially.
+Several copies of the same data is held in multiple nodes. The primary node is the main source for all the writen operations. This is where all data modifications begin and are implemented initially.
 
 Secondary node is a mirror of the primary node as it duplicates the data. This is used for dispersing the read workloads and load balancing.
 
-![Replica]("mongodbreplicaset.png")
+![Replica](pictures/mongodbreplicaset.png)
 
 #### Advantages
 

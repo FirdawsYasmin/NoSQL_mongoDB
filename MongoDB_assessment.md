@@ -12,7 +12,7 @@ A database in NoSQL is a storage container which holds semi/ no structured data.
 
 Often times the data stored in this format is within a data warehouse or a data lake.
 
-![NoSQL databases](NoSQLDatabases.jpg)
+![NoSQL databases](pictures/NoSQLDatabases.jpg)
 
 ### Document database
 
@@ -78,25 +78,118 @@ Column databases are designed to read data more efficiently and retrive data qui
 
 - Used to store large amounts of data.
 
+![column family](pictures/Nosql_columns.png)
+
 #### Key features
 
 - High scalability: Supports distributed data processing.
 
 ### Graph store
 
+A graph store database stores data as nodes (entities) and expresses their connections through edges (relationships) over tables.
+![graph store](pictures/graph_store.png)
+
+### Nodes
+
+- A label marks a node as a member, represents their different roles in a domain
+- Hold multiple key- value pairs
+- Be indexed, improving read function
+- Bound by constratins
+
+### Relationships
+
+- Must have a start node, end node and one type
+- show a direction
+- Meaning over view
+
 ## Querying
 
 ## normalisation vs denormalisation
 
+### Normalisation
+
+Organise data so redundancy is minimised and data integrity is maintained by breaking down complex data into smaller collections to avoid duplicating information.
+
+#### Advantages
+
+- Data is reduced
+- Optimised memory
+- Maintain integrity
+
+#### Disadvantages
+
+- The number of tables is increased
+- Consume more resources when using joins expensive operations
+
+### Denormalisation
+
+Data is combined to execute queries quickly.
+
+#### Advantages
+
+#### Disadvantages
+
 ## Database scaling
 
-## Graph databases (research this)
+In mongoDB we use horizontal scaling, this allows us to share resources amongst multiple servers. Vertical scaling applies more resources.
+
+Horizontal scaling is preferred as it is more secure.
 
 ## Relationships in Mongodb
 
-Mongosh commands
-Mongodb architecture
-Replica Sets
-Sharding
-.aggregate()
-`_id:` field
+Reminder MongoDB is a document NoSQL database! Therefore it uses embedding and referencing.
+
+### Embedding
+
+Embed sub-documents inside a larger document.
+
+- One-to-one
+- One-to-many
+
+Good for denormalised data. Default method in MongoDB as it is good for read.
+
+### Referencing
+
+Seperate documents will be referenced here, this helps with redundacy but affects the read function.
+
+- Many-to-many
+
+Best for normalised data, will use an ID.
+
+## Mongosh commands
+
+(REFER to MONGOSH.md)
+
+## Mongodb architecture
+
+### Replica Sets
+
+Several copies of the same data is held in multiple nodes. The primary node is the main source for all the writen operations. This is where all data modifications begin and are implemented initially.
+
+Secondary node is a mirror of the primary node as it duplicates the data. This is used for dispersing the read workloads and load balancing.
+
+### Sharding
+
+Horizontal scaling is the core to sharding. Large datasets are divided into smaller pieces and distributed across multiple shards (servers).
+
+Sharding helps with ensuring all the connections are still together through distributions across machines.
+
+## .aggregate()
+
+The aggregation pipeline is a READ ONLY default it allows us to view specific data in our collections.
+
+It has a number of stages which appear in an array.
+
+```
+db.collection.aggregate( [ { <stage> }, ... ] )
+```
+
+**Little details**
+
+- $set is an example of a stage in the aggregation pipeline
+
+## `_id:` field
+
+In MongoDB, each document stored in a standard collection requires a unique \_id field that acts as a primary key.
+
+When using $group aggregate expression we can set a field to be the \_id value to group the data as so.

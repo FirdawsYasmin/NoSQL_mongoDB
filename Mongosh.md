@@ -21,7 +21,7 @@ switched to db sparta
 
 This will not appear on the left until a collection has been created.
 
-### Creat a collection
+### Create a collection
 
 ```
 >db.createCollection("academy") # db.createCollection("<name of collection">)
@@ -398,7 +398,7 @@ output:
 <List of characters where height is greater than 200>
 ```
 
-## Aggregation: $convert
+## Update: $convert
 
 ```
 # Update many where height is type string
@@ -436,8 +436,8 @@ output:
 
 **Key information**
 
-- $convert is an aggregation function so [ ] are required
-- In aggregation when we want to refer to a field we need "$". Without the $ mongo would treat this as a string rather than a field.
+- $convert is an aggregation expression so [ ] are required for staging
+- In aggregation when we want to refer to a field we need the $. Without it mongoDB would treat this as a string rather than a field.
 
 ## Experiment with Operators
 
@@ -579,7 +579,7 @@ output:
 # The total height of every human in the database currently.
 ```
 
-### Another example of aggregation
+### $group by specific field
 
 Aggregation here contains two stages
 
@@ -601,7 +601,7 @@ output:
 # Output shows total sum grouped by gender only in human species
 ```
 
-### .aggregate with $group
+### $max
 
 ```
 db.characters.aggregate([{
@@ -610,6 +610,23 @@ db.characters.aggregate([{
 }])
 output:
 <groups all documents using homeworld, for their max height>
+```
+
+### $avg, remove null values and sort
+
+```
+db.characters.aggregate([{
+  $group: {
+    _id: "$species.name",
+    avg: {$avg: "$mass"},
+    count: {$sum:1}
+  }
+}, {
+  $match: {avg: {$ne: null}}},
+  {$sort: {avg: 1}}
+])
+output:
+<list of all documents grouped together by species with their average mass, remove nulls and sort>
 ```
 
 ## Activities
