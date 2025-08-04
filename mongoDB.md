@@ -4,7 +4,7 @@ MongoDB is an open source NOSQL database. This means it is **Not Only SQL**.
 
 The data within MongoDB is inputted as Json like objects and stored within documents as Bson documents.
 
-![Json_Bson](json_bson.jpg)
+![Json_Bson](pictures/json_bson.jpg)
 
 ## Core concepts
 
@@ -14,7 +14,7 @@ When we have multiple Bson Documents we are able to store them together in colle
 
 A database is able to store one or more collections of documents.
 
-![Collections and documents](database_colection.png)
+![Collections and documents](pictures/database_colection.png)
 
 There is no real structure for a collection as they are schemaless.
 
@@ -56,7 +56,7 @@ Occurs in the background, it is designed to be flexible.
 
 Sharding helps with ensuring all the connections are still together through distributions across machines.
 
-![Sharding](sharding.png)
+![Sharding](pictures/sharding.png)
 
 #### Advantages
 
@@ -74,7 +74,7 @@ Several copies of the same data is held in multiple nodes. The primary node is t
 
 Secondary node is a mirror of the primary node as it duplicates the data. This is used for dispersing the read workloads and load balancing.
 
-![Replica](mongodbreplicaset.png)
+![Replica](pictures/mongodbreplicaset.png)
 
 #### Advantages
 
@@ -196,7 +196,7 @@ A shell command which will show a list of the collections within the database.
 show collections
 ```
 
-![show collections](show_collections.png)
+![show collections](pictures/show_collections.png)
 
 ### Get collection names
 
